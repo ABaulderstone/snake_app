@@ -1,12 +1,12 @@
 <h1>Snake Listings</h1>
 
 <% @listings.each do |listing| %>
-    <p><%= listing.title %></p>
-    <p><%= listing.description %></p>
-    <p><%= listing.breed.name %></p>
-    <%= link_to "edit", edit_listing_path(listing.id) %>
-    <%= link_to "show", listing_path(listing.id) %>
-    <%= link_to "delete", listing_path(listing),
-              method: :delete,
-              data: { confirm: "Are you sure?" } %>
+<div class="card">
+  <%= image_tag listing.picture if listing.picture.attached? %>
+  <p><%= listing.title %></p>
+  <p><%= "#{listing.city}, #{listing.state}" %></p>
+  <p><%= listing.date_of_birth %></p>
+  <p><%= listing.price %></p>
+  <%= link_to "edit", edit_listing_path(listing.id) %>
+</div>
 <% end %>

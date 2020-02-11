@@ -51,7 +51,7 @@
         end
 
         def listing_params
-            params.require(:listing).permit(:title, :description, :price, :deposit, :city, :state, :date_of_birth, :diet, :breed_id, :sex)
+            params.require(:listing).permit(:title, :description, :price, :deposit, :city, :state, :date_of_birth, :diet, :breed_id, :sex, :picture)
         end
 
         def set_breeds_and_sexes

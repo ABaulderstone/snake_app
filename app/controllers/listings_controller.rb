@@ -21,6 +21,7 @@
             @listing = current_user.listings.create(listing_params)
         	
             if @listing.errors.any?
+                set_breeds_and_sexes
                 render "new"
             else
                 redirect_to listings_path

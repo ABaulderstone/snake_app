@@ -7,6 +7,6 @@
   <p><%= "#{listing.city}, #{listing.state}" %></p>
   <p><%= listing.date_of_birth %></p>
   <p><%= listing.price %></p>
-  <%= link_to "edit", edit_listing_path(listing.id) %>
+<%= link_to "edit", edit_listing_path(listing.id) if current_user.id == listing.user.id %>
 </div>
 <% end %>

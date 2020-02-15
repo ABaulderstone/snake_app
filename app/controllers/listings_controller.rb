@@ -10,13 +10,15 @@
         end
     
         def show
+            p Rails.application.credentials[Rails.env.to_sym][:endpoints][:success]
+           
             session = Stripe::Checkout::Session.create(
                 payment_method_types: ['card'],
                 customer_email: current_user.email,
                 line_items: [{
                     name: @listing.title,
-                    description: @listing.description,
-                    amount: @listing.deposit * 100,
+                    description: @listing.description, 
+                    amount: @listing.price * 100,
                     currency: 'aud',
                     quantity: 1,
                 }],
@@ -26,8 +28,8 @@
                         listing_id: @listing.id
                     }
                 },
-                success_url: "#{root_url}payments/success?userId=#{current_user.id}&listingId=#{@listing.id}",
-                cancel_url: "#{root_url}listings"
+                success_url: Rails.application.credentials[Rails.env.to_sym][:endpoints][:success],
+                cancel_url: Rails.application.credentials[Rails.env.to_sym][:endpoints][:cancel]
             )
         
             @session_id = session.id
@@ -75,7 +77,7 @@
         end
 
         def listing_params
-            params.require(:listing).permit(:title, :description, :price, :deposit, :city, :state, :date_of_birth, :diet, :breed_id, :sex, :picture)
+            params.require(:listing).permit(:title, :description, :price, :city, :state, :date_of_birth, :diet, :breed_id, :sex, :picture)
         end
 
         def set_breeds_and_sexes

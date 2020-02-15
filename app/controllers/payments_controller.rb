@@ -6,39 +6,19 @@ class PaymentsController < ApplicationController
   end
 
   def webhook
+    user_id = params[:data][:object][:client_reference_id] #Referencing perchaser (USER)
+    payment_id =  params[:data][:object][:payment_intent]  #Referencing the payment ID 
+    payment = Stripe::PaymentIntent.retrieve(payment_id)
+    listing_id = payment.metadata.listing_id
+  
+    p "listing id " + listing_id 
+    p "user id " + user_id
+    p "payment id " + payment_id
+  
+    Order.create(user_id: user_id, listing_id: listing_id, payment_id: payment_id)
+    render json: ""
 
-    event = Stripe::Event.construct_from(
-        params.to_unsafe_h
-    )
-
-    # Handle the event
-    case event.type
-    when 'payment_intent.succeeded'
-        payment_intent = event.data.object # contains a Stripe::PaymentIntent
-        buyer = User.find(payment_intent.metadata.user_id)
-        listing = Listing.find(payment_intent.metadata.listing_id)
-        listing.bought = true
-        listing.save
-        order = Order.new
-        order.user = buyer
-        order.listing = listing
-        order.save
-        # Then define and call a method to handle the successful payment intent.
-        # handle_payment_intent_succeeded(payment_intent)
-    when 'payment_method.attached'
-        payment_method = event.data.object # contains a Stripe::PaymentMethod
-        # Then define and call a method to handle the successful attachment of a PaymentMethod.
-        # handle_payment_method_attached(payment_method)
-    # ... handle other event types
-    else
-        # Unexpected event type
-        render body: nil, status: 422
-        return
-    end
-
-    # success, but don't need to send anything back to Stripe
-    head :no_content
-end
+  end
 
 
 end

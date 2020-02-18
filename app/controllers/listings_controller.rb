@@ -7,6 +7,7 @@
     
         def index
             @listings = Listing.all
+            p root_url
         end
     
         def show
